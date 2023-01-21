@@ -6,11 +6,23 @@ Create JSON Web Tokens, User Registration, Login and Authentication in our  .NET
 ```
 Microsoft.EntityFrameworkCore.Sqlite
 Microsoft.EntityFrameworkCore.Tools
+Microsoft.AspNetCore.Authentication.JwtBearer
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+Microsoft.AspNetCore.Identity.UI
+
+Microsoft.IdentityModel.Tokens
+System.IdentityModel.Tokens.Jwt
 ```
 
-## Migration
+## Init Migration
 ```
 Add-Migration InitialCreate
+Update-Database
+```
+
+## Identity Migration
+```
+Add-Migration Identity
 Update-Database
 ```
 
