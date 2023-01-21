@@ -4,9 +4,14 @@ Create JSON Web Tokens, User Registration, Login and Authentication in our  .NET
 
 ## Packages
 ```
-Microsoft.AspNetCore.Authentication.JwtBearer
-Microsoft.IdentityModel.Tokens
-System.IdentityModel.Tokens.Jwt
+Microsoft.EntityFrameworkCore.Sqlite
+Microsoft.EntityFrameworkCore.Tools
+```
+
+## Migration
+```
+Add-Migration InitialCreate
+Update-Database
 ```
 
 Get a token with wrong password:
