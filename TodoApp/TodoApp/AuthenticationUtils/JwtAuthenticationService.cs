@@ -57,16 +57,6 @@ namespace TodoApp.AuthenticationUtils
             };
         }
 
-        //public User GetCurrentUserFromHttpContext(HttpContext httpContext)
-        //{
-        //    ClaimsIdentity identity = httpContext.User.Identity as ClaimsIdentity;
-
-        //    if (identity == null) return null;
-
-        //    User user = GetUserModelFromClaim(identity);
-        //    return user;
-        //}
-
         //private User GetUserModelFromClaim(ClaimsIdentity identity)
         //{
         //    IEnumerable<Claim> userClaims = identity.Claims;
