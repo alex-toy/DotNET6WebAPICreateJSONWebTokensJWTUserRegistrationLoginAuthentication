@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using TodoApp.Configuration;
 using TodoApp.Models.DTOs.Requests;
 
@@ -14,10 +15,12 @@ namespace TodoApp.AuthenticationUtils
     public class JwtAuthenticationService : IJwtAuthenticationService
     {
         private readonly JwtConfig _jwtConfig;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public JwtAuthenticationService(IOptionsMonitor<JwtConfig> optionsMonitor)
+        public JwtAuthenticationService(IOptionsMonitor<JwtConfig> optionsMonitor, UserManager<IdentityUser> userManager)
         {
             _jwtConfig = optionsMonitor.CurrentValue;
+            _userManager = userManager;
         }
 
         public string GenerateToken(IdentityUser user)
@@ -37,11 +40,11 @@ namespace TodoApp.AuthenticationUtils
             return tokenHandler.WriteToken(token);
         }
 
-        //public IdentityUser Authenticate(UserRegistrationDto login)
-        //{
-        //    var users = GetUsersFromDB();
-        //    return users.Where(u => u.Email.ToUpper().Equals(login.Email.ToUpper()) && u.Password.Equals(login.Password)).FirstOrDefault();
-        //}
+        public async Task<bool> IsAuthenticated(IdentityUser existingUser, UserLoginRequest login)
+        {
+            bool isAuthenticated = await _userManager.CheckPasswordAsync(existingUser, login.Password);
+            return isAuthenticated;
+        }
 
         private static List<Claim> GetClaims(IdentityUser user)
         {

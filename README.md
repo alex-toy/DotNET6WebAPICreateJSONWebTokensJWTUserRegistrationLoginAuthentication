@@ -29,5 +29,11 @@ Update-Database
 Register unsuccessful:
 <img src="/pictures/register_unsuccessful.png" title="register unsuccessful"  width="800">
 
-Get a token with good password:
+Register with good password:
 <img src="/pictures/register_good_password.png" title="register good password"  width="800">
+
+Login unsuccessful:
+<img src="/pictures/login_unsuccessful.png" title="login unsuccessful"  width="800">
+
+Login successful:
+<img src="/pictures/login_successful.png" title="login successful"  width="800">

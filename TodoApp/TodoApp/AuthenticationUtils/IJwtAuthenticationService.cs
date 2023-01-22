@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 using TodoApp.Models.DTOs.Requests;
 
 namespace TodoApp.AuthenticationUtils
 {
     public interface IJwtAuthenticationService
     {
-        //IdentityUser Authenticate(UserRegistrationDto model);
+        Task<bool> IsAuthenticated(IdentityUser existingUser, UserLoginRequest login);
         string GenerateToken(IdentityUser user);
         //IdentityUser GetCurrentUserFromHttpContext(HttpContext httpContext);
     }

@@ -16,14 +16,14 @@ namespace TodoApp.Controllers
     public class AuthManagementController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IJwtAuthenticationService _jwtAutService;
+        private readonly IJwtAuthenticationService _jwtAuthService;
         private readonly JwtConfig _jwtConfig;
 
         public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtConfig> optionsMonitor, IJwtAuthenticationService jwtAutService)
         {
             _userManager = userManager;
             _jwtConfig = optionsMonitor.CurrentValue;
-            _jwtAutService = jwtAutService;
+            _jwtAuthService = jwtAutService;
         }
 
         [HttpPost]
@@ -51,7 +51,41 @@ namespace TodoApp.Controllers
                 IsSuccess = false
             });
 
-            string token = _jwtAutService.GenerateToken(newUser);
+            string token = _jwtAuthService.GenerateToken(newUser);
+            return Ok(new RegistrationResponse()
+            {
+                IsSuccess = true,
+                Token = token,
+            });
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest userLogin)
+        {
+            if (!ModelState.IsValid) return BadRequest(new RegistrationResponse()
+            {
+                Errors = new List<string> { "invalid payload" },
+                IsSuccess = false
+            });
+
+            IdentityUser userDb = await _userManager.FindByEmailAsync(userLogin.Email);
+            if (userDb == null) return BadRequest(new RegistrationResponse()
+            {
+                Errors = new List<string> { "User doesn't exists" },
+                IsSuccess = false
+            });
+
+            bool isAuthenticated = await _jwtAuthService.IsAuthenticated(userDb, userLogin);
+
+
+            if (!isAuthenticated) return BadRequest(new RegistrationResponse()
+            {
+                Errors = new List<string> { "User not authenticated" },
+                IsSuccess = false
+            });
+
+            var token = _jwtAuthService.GenerateToken(userDb);
             return Ok(new RegistrationResponse()
             {
                 IsSuccess = true,
