@@ -26,6 +26,8 @@ Add-Migration Identity
 Update-Database
 ```
 
+## Registration & Login
+
 Register unsuccessful:
 <img src="/pictures/register_unsuccessful.png" title="register unsuccessful"  width="800">
 
@@ -37,3 +39,11 @@ Login unsuccessful:
 
 Login successful:
 <img src="/pictures/login_successful.png" title="login successful"  width="800">
+
+## Use Todo API
+
+Todo unsuccessful:
+<img src="/pictures/todo_unsuccessful.png" title="todo unsuccessful"  width="800">
+
+Todo successful:
+<img src="/pictures/todo_successful.png" title="todo successful"  width="800">
