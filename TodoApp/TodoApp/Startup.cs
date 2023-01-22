@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using TodoApp.AuthenticationUtils;
 using TodoApp.Configuration;
 using TodoApp.Data;
 
@@ -54,6 +55,7 @@ namespace TodoApp
                 .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApiDbContext>();
 
+            services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

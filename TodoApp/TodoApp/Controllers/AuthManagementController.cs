@@ -1,6 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TodoApp.AuthenticationUtils;
 using TodoApp.Configuration;
+using TodoApp.Models.DTOs.Requests;
+using TodoApp.Models.DTOs.Responses;
 
 namespace TodoApp.Controllers
 {
@@ -9,14 +16,47 @@ namespace TodoApp.Controllers
     public class AuthManagementController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IJwtAuthenticationService _jwtAutService;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthManagementController(UserManager<IdentityUser> userManager, JwtConfig jwtConfig)
+        public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtConfig> optionsMonitor, IJwtAuthenticationService jwtAutService)
         {
             _userManager = userManager;
-            _jwtConfig = jwtConfig;
+            _jwtConfig = optionsMonitor.CurrentValue;
+            _jwtAutService = jwtAutService;
         }
 
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)
+        {
+            if (!ModelState.IsValid) return BadRequest(new RegistrationResponse()
+            {
+                Errors = new List<string> { "invalid payload" },
+                IsSuccess = false
+            });
 
+            IdentityUser userDb = await _userManager.FindByEmailAsync(user.Email);
+            if (userDb != null) return BadRequest(new RegistrationResponse()
+            {
+                Errors = new List<string> { "User already exists" },
+                IsSuccess = false
+            });
+
+            IdentityUser newUser = new IdentityUser() { Email = user.Email, UserName = user.Name };
+            IdentityResult creation = await _userManager.CreateAsync(newUser, user.Password);
+            if (!creation.Succeeded) return BadRequest(new RegistrationResponse()
+            {
+                Errors = creation.Errors.Select(err => err.Description).ToList(),
+                IsSuccess = false
+            });
+
+            string token = _jwtAutService.GenerateToken(newUser);
+            return Ok(new RegistrationResponse()
+            {
+                IsSuccess = true,
+                Token = token,
+            });
+        }
     }
 }

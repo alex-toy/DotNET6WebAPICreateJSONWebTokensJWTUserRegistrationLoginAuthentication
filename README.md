@@ -26,6 +26,8 @@ Add-Migration Identity
 Update-Database
 ```
 
-Get a token with wrong password:
+Register unsuccessful:
+<img src="/pictures/register_unsuccessful.png" title="register unsuccessful"  width="800">
 
-<img src="/pictures/mez_wrong.png" title="user not found"  width="800">
+Get a token with good password:
+<img src="/pictures/register_good_password.png" title="register good password"  width="800">
